@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidaturas — Kelly Cristina Santos e Santos</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      background: #fff7ed;
+      color: #18181b;
+      line-height: 1.45;
+      padding: 20px 16px;
+    }
+    .container { max-width: 1040px; margin: 0 auto; }
+
+    /* Cabeçalho inspirado no layout Teal + Laranja + Branco */
+    .hero-shell {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      background: #ffffff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      margin-bottom: 22px;
+      border: 1px solid #fed7aa;
+    }
+    .hero-left {
+      padding: 22px 24px;
+      border-left: 8px solid #ff6f00;
+    }
+    .title-accent {
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .circle-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #ff6f00;
+      display: inline-block;
+      margin-right: -20px;
+      flex-shrink: 0;
+    }
+    .hero-left h1 {
+      position: relative;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #18181b;
+    }
+    .hero-left p {
+      font-size: 13px;
+      color: #52525b;
+      margin-top: 4px;
+    }
+    .hero-left p strong { color: #009999; font-weight: 700; }
+
+    .hero-right {
+      background: #00a8a8;
+      color: #ffffff;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 6px;
+      min-width: 210px;
+    }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #ff6f00;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #ffffff; }
+    .hero-sub { font-size: 11px; opacity: 0.92; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    @media (max-width: 680px) {
+      .hero-shell { grid-template-columns: 1fr; }
+      .hero-right { align-items: flex-start; }
+    }
+
+    /* KPIs estilo Infográfico (topo colorido alternando Teal e Laranja) */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .kpi-card {
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e4e4e7;
+      text-align: center;
+    }
+    .kpi-top {
+      padding: 7px 10px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+    }
+    .kpi-card.teal .kpi-top { background: #00a8a8; }
+    .kpi-card.orange .kpi-top { background: #ff6f00; }
+    .kpi-card.dark .kpi-top { background: #27272a; }
+    .kpi-body { padding: 14px 10px; }
+    .kpi-val { font-size: 28px; font-weight: 800; color: #18181b; }
+    .kpi-card.teal .kpi-val { color: #008b8b; }
+    .kpi-card.orange .kpi-val { color: #e65100; }
+
+    /* Barra de filtros e busca */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      background: #ffffff;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid #fed7aa;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-pill {
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      color: #3f3f46;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-pill:hover { background: #ffedd5; border-color: #fdba74; }
+    .filter-pill.active { background: #00a8a8; border-color: #00a8a8; color: #ffffff; }
+
+    .search-box {
+      width: 260px;
+      max-width: 100%;
+      background: #fafafa;
+      border: 1.5px solid #d4d4d8;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      color: #18181b;
+      outline: none;
+    }
+    .search-box:focus { border-color: #ff6f00; background: #ffffff; }
+
+    /* Cards das vagas */
+    .jobs-list { display: flex; flex-direction: column; gap: 14px; }
+    .job-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 18px 20px;
+      border: 1px solid #e4e4e7;
+      border-left: 6px solid #00a8a8;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+    }
+    .job-card.discarded {
+      border-left-color: #a1a1aa;
+      opacity: 0.92;
+    }
+    .job-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .job-left { display: flex; align-items: flex-start; gap: 14px; flex: 1; min-width: 240px; }
+    .score-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      flex-shrink: 0;
+      color: #ffffff;
+    }
+    .score-high { background: #00a8a8; }
+    .score-mid { background: #ff6f00; }
+    .score-low { background: #71717a; }
+
+    .job-title-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .job-link {
+      font-size: 16px;
+      font-weight: 700;
+      color: #18181b;
+      text-decoration: underline;
+      text-decoration-color: #ff6f00;
+      text-underline-offset: 3px;
+    }
+    .job-link:hover { color: #008b8b; }
+    .job-id {
+      font-size: 11px;
+      font-weight: 700;
+      background: #ffedd5;
+      color: #c2410c;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .company { font-size: 14px; font-weight: 600; color: #008b8b; margin-top: 3px; }
+
+    .job-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .status-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .st-avaliar { background: #ccfbf1; color: #0f766e; }
+    .st-processo { background: #ffedd5; color: #c2410c; }
+    .st-ok { background: #00a8a8; color: #ffffff; }
+    .st-pendente { background: #fef3c7; color: #92400e; }
+    .st-descartada { background: #e4e4e7; color: #52525b; }
+
+    .status-select {
+      font-size: 12px;
+      font-weight: 600;
+      background: #ffffff;
+      border: 1.5px solid #d4d4d8;
+      border-radius: 8px;
+      padding: 4px 8px;
+      color: #27272a;
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .chip {
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      color: #27272a;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+    .chip strong { color: #008b8b; }
+
+    .job-footer {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #f4f4f5;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #52525b;
+    }
+    .btn-details {
+      background: #ff6f00;
+      color: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn-details:hover { background: #e65100; }
+
+    .details-box {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed #d4d4d8;
+      font-size: 13px;
+      color: #27272a;
+    }
+    .details-box.open { display: block; }
+    .details-item { margin-bottom: 10px; }
+    .discard-box {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .carta-box {
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .carta-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .carta-head span { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #0f766e; }
+    .btn-copy {
+      background: #00a8a8;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-copy:hover { background: #008b8b; }
+    .carta-text { white-space: pre-wrap; font-family: inherit; font-size: 13px; color: #18181b; }
+
+    .empty-state {
+      display: none;
+      background: #ffffff;
+      border: 1px solid #fed7aa;
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      font-size: 14px;
+      color: #52525b;
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #18181b;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border-left: 4px solid #ff6f00;
+      display: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero-shell">
+      <div class="hero-left">
+        <div class="title-accent">
+          <span class="circle-badge"></span>
+          <h1>Candidaturas — Kelly Cristina</h1>
+        </div>
+        <p>Registro diário do agente: vagas analisadas, candidaturas enviadas e próximas etapas. <strong>Atualizado 23/11/2026</strong></p>
+      </div>
+      <div class="hero-right">
+        <div class="badge-live"><span class="dot"></span> Busca diurna ativa</div>
+        <div class="hero-sub">CRM • Marketing • Estratégia</div>
+      </div>
+    </header>
+
+    <section class="kpi-grid">
+      <div class="kpi-card teal"><div class="kpi-top">Candidaturas</div><div class="kpi-body"><div id="kpi-candidaturas" class="kpi-val">0</div></div></div>
+      <div class="kpi-card orange"><div class="kpi-top">Hoje</div><div class="kpi-body"><div id="kpi-hoje" class="kpi-val">0</div></div></div>
+      <div class="kpi-card teal"><div class="kpi-top">Em processo</div><div class="kpi-body"><div id="kpi-em-processo" class="kpi-val">0</div></div></div>
+      <div class="kpi-card orange"><div class="kpi-top">Para avaliar</div><div class="kpi-body"><div id="kpi-para-avaliar" class="kpi-val">0</div></div></div>
+      <div class="kpi-card teal"><div class="kpi-top">Vagas analisadas</div><div class="kpi-body"><div id="kpi-analisadas" class="kpi-val">0</div></div></div>
+      <div class="kpi-card dark"><div class="kpi-top">Descartadas</div><div class="kpi-body"><div id="kpi-descartadas" class="kpi-val">0</div></div></div>
+    </section>
+
+    <section class="toolbar">
+      <div id="filter-container" class="filters">
+        <button type="button" class="filter-pill active" data-filter="Todas">Todas</button>
+        <button type="button" class="filter-pill" data-filter="Candidatadas">Candidatadas</button>
+        <button type="button" class="filter-pill" data-filter="Em processo">Em processo</button>
+        <button type="button" class="filter-pill" data-filter="Avaliar">Avaliar</button>
+        <button type="button" class="filter-pill" data-filter="Pendentes">Pendentes</button>
+        <button type="button" class="filter-pill" data-filter="Descartadas">Descartadas</button>
+      </div>
+      <input id="search-input" class="search-box" type="text" placeholder="Buscar empresa ou cargo" />
+    </section>
+
+    <main id="jobs-list" class="jobs-list"></main>
+    <div id="empty-state" class="empty-state">Nenhuma vaga encontrada para o filtro ou termo pesquisado.</div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const STATUS_LIST = [
+      "PARA AVALIAR", "APROVADA POR MIM", "CANDIDATURA EM PREPARAÇÃO",
+      "CANDIDATADA", "EM PROCESSO", "ENTREVISTA", "TESTE / CASE",
+      "PENDENTE", "PROPOSTA", "ENCERRADA", "DESCARTADA"
+    ];
+
+    const INITIAL_JOBS = [
+      {
+        id: "VAGA-001",
+        dataBusca: "22/11/2026",
+        dataCandidatura: "Não informado",
+        dataPublicacao: "11/11/2026",
+        dataFechamento: "07/12/2026",
+        nome: "Analista de CRM e Comunicação Júnior - Água Branca (SP)",
+        empresa: "Dexco (Deca e Revestimentos)",
+        link: "https://dexco.gupy.io/jobs/12872770?jobBoardSource=gupy_public_page",
+        fonte: "Gupy (Página oficial)",
+        local: "São Paulo/SP (Água Branca)",
+        modelo: "Híbrido",
+        salario: "Salário não informado",
+        nota: 94,
+        classificacao: "Compatibilidade excelente",
+        status: "PARA AVALIAR",
+        motivoCompatibilidade: "Aderência quase total em CRM (Veeva/Salesforce), higienização e segmentação de bases, réguas de relacionamento, newsletters/comunicados e análise de KPIs de e-mail, além de nível Júnior e localização em Água Branca/SP.",
+        principaisGaps: "Vivência prévia no setor de materiais de construção e revestimentos (não eliminatório).",
+        motivoDescarte: "",
+        carta: "Prezados(as) recrutadores(as) da Dexco,\n\nAcompanho a força de marcas como Deca, Portinari e Duratex e me identifiquei muito com a oportunidade de Analista de CRM e Comunicação Júnior para a unidade de Deca e Revestimentos. Acredito que minha trajetória une exatamente os dois pilares que a posição pede: comunicação clara com diferentes públicos e operação estruturada de CRM orientada a dados.\n\nNa Bayer, atuo na operação de CRM para a América Latina, planejando e executando réguas de relacionamento digitais por e-mail e WhatsApp com segmentação de bases e análise de KPIs para orientar planos de ação. Também criei uma intranet de CRM, newsletters e materiais de comunicação para a força de vendas e times internos, além de liderar melhorias de processo que aumentaram a rastreabilidade das operações. Antes disso, na Viasat, trabalhei diretamente com Salesforce para qualificação e histórico unificado de clientes.\n\nEstou concluindo o bacharelado em Publicidade e Propaganda em dezembro de 2026 e gostaria muito de contribuir para o Conexão360 e para os resultados de relacionamento e comunicação da Dexco.\n\nAtenciosamente,\nKelly Cristina Santos e Santos",
+        proximaAcao: "Aguardando aprovação (OK VAGA-001)"
+      },
+      {
+        id: "VAGA-003",
+        dataBusca: "22/11/2026",
+        dataCandidatura: "Não informado",
+        dataPublicacao: "19/11/2026",
+        dataFechamento: "19/12/2026",
+        nome: "Analista de Marketing de Produto Jr - São Paulo",
+        empresa: "Vigor Alimentos",
+        link: "https://vigoralimentos.gupy.io/job/eyJqb2JJZCI6MTI5MjM2NDksInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
+        fonte: "Gupy (Página oficial)",
+        local: "São Paulo/SP (Barra Funda)",
+        modelo: "Híbrido (4x presencial)",
+        salario: "Salário não informado",
+        nota: 79,
+        classificacao: "Boa compatibilidade",
+        status: "PARA AVALIAR",
+        motivoCompatibilidade: "Sólida base em análise de indicadores, Excel intermediário, campanhas e alinhamento com Produto/Comercial. Aceita graduação cursando ou completa e fica na Barra Funda.",
+        principaisGaps: "Sem menção a Nielsen/Scanntech e sem vivência anterior no setor alimentício.",
+        motivoDescarte: "",
+        carta: "Prezados(as) recrutadores(as) da Vigor Alimentos,\n\nEscrevo para apresentar minha candidatura à vaga de Analista de Marketing de Produto Jr em São Paulo. Tenho grande interesse em atuar próximo à gestão de portfólio e categoria, apoiando lançamentos e análises de desempenho com foco em resultado.\n\nMinha experiência combina visão comercial prática, construída à frente do meu próprio negócio com controle de estoque, previsão de demanda e e-commerce, com a rotina analítica de multinacional na Bayer, onde acompanho indicadores comerciais em painéis, consolido dados para tomada de decisão e atuo em parceria direta com times de Produto e áreas comerciais.\n\nConcluo Publicidade e Propaganda em dezembro de 2026 e possuo certificações recentes em Métricas Digitais e Marketing Inteligente. Será uma satisfação contribuir com organização, leitura de dados e agilidade para as marcas da Vigor.\n\nAtenciosamente,\nKelly Cristina Santos e Santos",
+        proximaAcao: "Aguardando aprovação (OK VAGA-003)"
+      },
+      {
+        id: "VAGA-002",
+        dataBusca: "22/11/2026",
+        dataCandidatura: "Não informado",
+        dataPublicacao: "19/11/2026",
+        dataFechamento: "10/01/2027",
+        nome: "Analista Marketing JR",
+        empresa: "Assaí Atacadista",
+        link: "https://assai.gupy.io/job/eyJqb2JJZCI6MTI4NzM4NTEsInNvdXJjZSI6Imd1cHlfcG9ydGFsIn0=?jobBoardSource=gupy_portal",
+        fonte: "Gupy (Página oficial)",
+        local: "São Paulo/SP (Aricanduva)",
+        modelo: "Híbrido",
+        salario: "Salário não informado",
+        nota: 78,
+        classificacao: "Boa compatibilidade",
+        status: "PARA AVALIAR",
+        motivoCompatibilidade: "Forte aderência em gestão de projetos (Azure DevOps, Trello), cronogramas, negociação com fornecedores, relatórios executivos e vivência comercial de varejo.",
+        principaisGaps: "Pede Excel avançado e noções de Power BI, exige Superior Completo (conclusão em dez/2026) e fica na Zona Leste.",
+        motivoDescarte: "",
+        carta: "Prezados(as) recrutadores(as) do Assaí Atacadista,\n\nGostaria de me candidatar à posição de Analista de Marketing Jr. Admiro a capilaridade e o ritmo de crescimento do Assaí no varejo brasileiro e acredito que meu perfil de execução organizada e foco em resultado pode agregar ao time de trade marketing.\n\nNa Bayer, coordeno cronogramas, comunicados, treinamentos e projetos multidisciplinares envolvendo times de produto, força de vendas e fornecedores, incluindo a internalização da gestão de eventos online na América Latina com redução de custos. Somado a isso, minha experiência prévia como empreendedora me trouxe contato direto com operação de ponto de venda, negociação com fornecedores e campanhas promocionais.\n\nConcluo minha graduação em Publicidade e Propaganda agora em dezembro de 2026 e fico à disposição para conversar sobre como posso apoiar as entregas e projetos da área.\n\nAtenciosamente,\nKelly Cristina Santos e Santos",
+        proximaAcao: "Aguardando aprovação (OK VAGA-002)"
+      },
+      {
+        id: "VAGA-004",
+        dataBusca: "22/11/2026",
+        dataCandidatura: "Não informado",
+        dataPublicacao: "26/10/2026",
+        dataFechamento: "23/12/2026",
+        nome: "Analista de Marketing Pleno (Produtos PJ)",
+        empresa: "Tokio Marine Seguradora",
+        link: "https://tokiomarine.gupy.io/jobs/12778801?jobBoardSource=gupy_public_page",
+        fonte: "Gupy (Página oficial)",
+        local: "São Paulo/SP",
+        modelo: "Híbrido",
+        salario: "Salário não informado",
+        nota: 74,
+        classificacao: "Boa compatibilidade",
+        status: "PARA AVALIAR",
+        motivoCompatibilidade: "Boa aderência em eventos, campanhas multicanal, negociação com fornecedores, alinhamento com Compliance/áreas internas e acompanhamento de KPIs.",
+        principaisGaps: "Posição Pleno com gestão orçamentária dedicada e exigência de Superior completo (conclusão dez/2026).",
+        motivoDescarte: "",
+        carta: "Prezados(as) recrutadores(as) da Tokio Marine Seguradora,\n\nTenho muito interesse na oportunidade de Analista de Marketing Pleno para Produtos PJ. A atuação consultiva junto a parceiros de negócios e áreas internas, equilibrando visão analítica, eventos e posicionamento de marca, conversa diretamente com o que venho construindo na minha carreira.\n\nAtualmente na Bayer, atuo em Excelência Comercial para a América Latina, conduzindo ações multicanal, acompanhando KPIs em relatórios de desempenho e garantindo alinhamento rigoroso com liderança e Compliance. Também liderei a internalização dos eventos online da CS-LatAm no Communication Day, negociando escopos e reduzindo custos com fornecedores, experiência que complementa minha vivência anterior em gestão comercial e negociação de contratos.\n\nConcluo o bacharelado em Publicidade e Propaganda em dezembro de 2026 e seria uma honra contribuir com a equipe da Tokio Marine.\n\nAtenciosamente,\nKelly Cristina Santos e Santos",
+        proximaAcao: "Aguardando aprovação (OK VAGA-004)"
+      },
+      {
+        id: "VAGA-005",
+        dataBusca: "22/11/2026",
+        dataCandidatura: "Não informado",
+        dataPublicacao: "19/11/2026",
+        dataFechamento: "26/11/2026",
+        nome: "Analista III - Branding e Comunicação (Eudora)",
+        empresa: "Grupo Boticário",
+        link: "https://grupoboticario.gupy.io/jobs/12837133?jobBoardSource=gupy_public_page",
+        fonte: "Gupy (Página oficial)",
+        local: "São Paulo/SP",
+        modelo: "Híbrido",
+        salario: "Salário não informado",
+        nota: 64,
+        classificacao: "Descartar",
+        status: "DESCARTADA",
+        motivoCompatibilidade: "Empresa prioritária, porém abaixo da nota de corte.",
+        principaisGaps: "Senioridade Analista III e expertise profunda em redes sociais (TikTok, IG, YouTube).",
+        motivoDescarte: "Compatibilidade de 64%. Senioridade Analista III acima do perfil atual e exigência de expertise específica em redes sociais não comprovada no currículo.",
+        carta: "",
+        proximaAcao: "Descartada (< 65 pontos)"
+      },
+      {
+        id: "VAGA-006",
+        dataBusca: "22/11/2026",
+        dataCandidatura: "Não informado",
+        dataPublicacao: "16/11/2026",
+        dataFechamento: "31/12/2026",
+        nome: "Analista de Marketing e Comunicação",
+        empresa: "Motriz",
+        link: "https://motriz.gupy.io/jobs/12882167?jobBoardSource=gupy_public_page",
+        fonte: "Gupy (Página oficial)",
+        local: "Remoto (Brasil)",
+        modelo: "Remoto",
+        salario: "Salário não informado",
+        nota: 59,
+        classificacao: "Descartar",
+        status: "DESCARTADA",
+        motivoCompatibilidade: "Modelo remoto, mas escopo institucional/imprensa distante do foco em CRM.",
+        principaisGaps: "Nível pleno/sênior em comunicação institucional, RP e assessoria de imprensa.",
+        motivoDescarte: "Compatibilidade de 59%. Exige nível pleno/sênior em comunicação institucional, relações públicas e assessoria de imprensa.",
+        carta: "",
+        proximaAcao: "Descartada (< 65 pontos)"
+      },
+      {
+        id: "VAGA-007",
+        dataBusca: "22/11/2026",
+        dataCandidatura: "Não informado",
+        dataPublicacao: "26/10/2026",
+        dataFechamento: "20/11/2026",
+        nome: "Analista de CRM - RJ",
+        empresa: "MRM Brasil",
+        link: "https://mrm.gupy.io/jobs/12782701?jobBoardSource=gupy_public_page",
+        fonte: "Gupy (Página oficial)",
+        local: "Rio de Janeiro/RJ",
+        modelo: "Híbrido (3x/semana)",
+        salario: "Salário não informado",
+        nota: 55,
+        classificacao: "Descartar",
+        status: "DESCARTADA",
+        motivoCompatibilidade: "Escopo técnico aderente, mas inviável por cidade, idioma e prazo encerrado.",
+        principaisGaps: "Atuação no RJ, inglês avançado e inscrições encerradas em 20/11/2026.",
+        motivoDescarte: "Compatibilidade de 55%. Inscrições encerradas em 20/11/2026, atuação no RJ e inglês avançado obrigatório.",
+        carta: "",
+        proximaAcao: "Descartada (< 65 pontos)"
+      }
+    ];
+
+    const STORAGE_KEY = "kelly_gsites_state_v2";
+    let jobs = loadJobs();
+    fetch('./vagas.json?_=' + Date.now())
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && Array.isArray(data.vagas) && data.vagas.length > 0) {
+          const localMap = {};
+          jobs.forEach(j => { localMap[j.id] = j; });
+          jobs = data.vagas.map(v => ({
+            ...v,
+            status: (localMap[v.id] && localMap[v.id].status) || v.status
+          }));
+          renderJobs();
+        }
+      })
+      .catch(() => {});
+    let currentFilter = "Todas";
+    let searchTerm = "";
+
+    function loadJobs() {
+      try {
+        const s = localStorage.getItem(STORAGE_KEY);
+        if (s) {
+          const p = JSON.parse(s);
+          if (Array.isArray(p) && p.length) return p;
+        }
+      } catch (e) {}
+      return INITIAL_JOBS.map(j => ({ ...j }));
+    }
+
+    function saveJobs() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs)); } catch (e) {}
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.style.display = "block";
+      clearTimeout(window.__tt);
+      window.__tt = setTimeout(() => { t.style.display = "none"; }, 2500);
+    }
+
+    function scoreClass(nota) {
+      if (nota >= 80) return "score-high";
+      if (nota >= 65) return "score-mid";
+      return "score-low";
+    }
+
+    function statusClass(status) {
+      if (status === "CANDIDATADA" || status === "PROPOSTA") return "st-ok";
+      if (["EM PROCESSO", "ENTREVISTA", "TESTE / CASE", "APROVADA POR MIM", "CANDIDATURA EM PREPARAÇÃO"].includes(status)) return "st-processo";
+      if (status === "PARA AVALIAR") return "st-avaliar";
+      if (status === "PENDENTE") return "st-pendente";
+      return "st-descartada";
+    }
+
+    function matchesFilter(job, filter) {
+      if (filter === "Todas") return true;
+      if (filter === "Candidatadas") return job.status === "CANDIDATADA";
+      if (filter === "Em processo") return ["EM PROCESSO", "ENTREVISTA", "TESTE / CASE", "APROVADA POR MIM", "CANDIDATURA EM PREPARAÇÃO", "PROPOSTA"].includes(job.status);
+      if (filter === "Avaliar") return job.status === "PARA AVALIAR";
+      if (filter === "Pendentes") return job.status === "PENDENTE";
+      if (filter === "Descartadas") return ["DESCARTADA", "ENCERRADA"].includes(job.status);
+      return true;
+    }
+
+    function updateKPIs() {
+      const candidaturas = jobs.filter(j => ["CANDIDATADA", "EM PROCESSO", "ENTREVISTA", "TESTE / CASE", "PROPOSTA"].includes(j.status)).length;
+      const hoje = jobs.filter(j => j.dataCandidatura === "23/11/2026" || j.dataCandidatura === "22/11/2026").length;
+      const emProcesso = jobs.filter(j => ["EM PROCESSO", "ENTREVISTA", "TESTE / CASE", "PROPOSTA"].includes(j.status)).length;
+      const paraAvaliar = jobs.filter(j => j.status === "PARA AVALIAR").length;
+      const descartadas = jobs.filter(j => j.status === "DESCARTADA").length;
+
+      document.getElementById("kpi-candidaturas").textContent = candidaturas;
+      document.getElementById("kpi-hoje").textContent = hoje;
+      document.getElementById("kpi-em-processo").textContent = emProcesso;
+      document.getElementById("kpi-para-avaliar").textContent = paraAvaliar;
+      document.getElementById("kpi-analisadas").textContent = jobs.length;
+      document.getElementById("kpi-descartadas").textContent = descartadas;
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast("Carta copiada.")).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); showToast("Carta copiada."); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function renderJobs() {
+      updateKPIs();
+      const list = document.getElementById("jobs-list");
+      const empty = document.getElementById("empty-state");
+      const term = searchTerm.trim().toLowerCase();
+
+      const filtered = jobs.filter(j => {
+        if (!matchesFilter(j, currentFilter)) return false;
+        if (!term) return true;
+        return j.nome.toLowerCase().includes(term) || j.empresa.toLowerCase().includes(term) || j.id.toLowerCase().includes(term);
+      });
+
+      list.innerHTML = "";
+      if (!filtered.length) { empty.style.display = "block"; return; }
+      empty.style.display = "none";
+
+      filtered.forEach(job => {
+        const card = document.createElement("article");
+        card.className = "job-card" + (job.status === "DESCARTADA" ? " discarded" : "");
+        const options = STATUS_LIST.map(s => `<option value="${s}" ${s === job.status ? "selected" : ""}>${s}</option>`).join("");
+        const detailsId = "det-" + job.id;
+
+        card.innerHTML = `
+          <div class="job-top">
+            <div class="job-left">
+              <div class="score-box ${scoreClass(job.nota)}">${job.nota}</div>
+              <div>
+                <div class="job-title-row">
+                  <a class="job-link" href="${job.link}" target="_blank" rel="noopener noreferrer">${job.nome}</a>
+                  <span class="job-id">${job.id}</span>
+                </div>
+                <div class="company">${job.empresa}</div>
+              </div>
+            </div>
+            <div class="job-right">
+              <span class="status-badge ${statusClass(job.status)}">${job.status}</span>
+              <select class="status-select" data-job-id="${job.id}">${options}</select>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip"><strong>Busca:</strong> ${job.dataBusca}</span>
+            <span class="chip"><strong>Publicada:</strong> ${job.dataPublicacao}</span>
+            <span class="chip"><strong>Fechamento:</strong> ${job.dataFechamento}</span>
+            <span class="chip">${job.modelo}</span>
+            <span class="chip">${job.local}</span>
+            <span class="chip">${job.fonte}</span>
+            <span class="chip">${job.salario}</span>
+          </div>
+          <div class="job-footer">
+            <span><strong>Próxima ação:</strong> ${job.proximaAcao}</span>
+            <button type="button" class="btn-details" data-toggle="${detailsId}">Ver análise, gaps e carta</button>
+          </div>
+          <div id="${detailsId}" class="details-box">
+            <div class="details-item"><strong>Classificação (${job.nota}/100):</strong> ${job.classificacao}</div>
+            <div class="details-item"><strong>Motivo da compatibilidade:</strong> ${job.motivoCompatibilidade}</div>
+            <div class="details-item"><strong>Principais gaps:</strong> ${job.principaisGaps}</div>
+            ${job.motivoDescarte ? `<div class="discard-box"><strong>Motivo do descarte:</strong> ${job.motivoDescarte}</div>` : ""}
+            ${job.carta ? `
+              <div class="carta-box">
+                <div class="carta-head">
+                  <span>Carta de apresentação preparada</span>
+                  <button type="button" class="btn-copy" data-copy-id="${job.id}">Copiar carta</button>
+                </div>
+                <pre class="carta-text">${job.carta}</pre>
+              </div>
+            ` : ""}
+          </div>
+        `;
+        list.appendChild(card);
+      });
+
+      list.querySelectorAll(".status-select").forEach(sel => {
+        sel.addEventListener("change", e => {
+          const id = e.target.getAttribute("data-job-id");
+          const st = e.target.value;
+          const item = jobs.find(x => x.id === id);
+          if (item) {
+            item.status = st;
+            if (st === "CANDIDATADA" && item.dataCandidatura === "Não informado") item.dataCandidatura = "23/11/2026";
+            saveJobs();
+            renderJobs();
+            showToast("Status de " + id + " atualizado.");
+          }
+        });
+      });
+
+      list.querySelectorAll(".btn-details").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const el = document.getElementById(btn.getAttribute("data-toggle"));
+          if (el) {
+            const isOpen = el.classList.toggle("open");
+            btn.textContent = isOpen ? "Ocultar detalhes" : "Ver análise, gaps e carta";
+          }
+        });
+      });
+
+      list.querySelectorAll(".btn-copy").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = jobs.find(x => x.id === btn.getAttribute("data-copy-id"));
+          if (item && item.carta) copyText(item.carta);
+        });
+      });
+    }
+
+    document.getElementById("filter-container").addEventListener("click", e => {
+      const btn = e.target.closest(".filter-pill");
+      if (!btn) return;
+      currentFilter = btn.getAttribute("data-filter");
+      document.querySelectorAll(".filter-pill").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderJobs();
+    });
+
+    document.getElementById("search-input").addEventListener("input", e => {
+      searchTerm = e.target.value;
+      renderJobs();
+    });
+
+    renderJobs();
+  </script>
+</body>
+</html>
